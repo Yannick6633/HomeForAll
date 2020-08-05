@@ -1,0 +1,102 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title propriete.titre %}
+
+{% block body %}
+    <div class="jumbotron">
+        <div class="container">
+
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {% if not form.vars.valid %}
+                <div class="alert alert-danger">
+                    Erreur ! veuillez entrer une adresse mail valide
+                </div>
+            {% endif %}
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div data-slider>
+                    {% if propriete.imagename %}
+                        <img src="{{ vich_uploader_asset(propriete, 'imageFile') | imagine_filter('medium') }}"
+                             alt="card-img-top" style="width: 100%; height: auto">
+                    {% else %}
+                        <img src="{{ '/uploads/images/proprietes/empty.jpg' | imagine_filter('medium') }}"
+                             alt="card-img-top" style="width: 100%; height: auto">
+                    {% endif %}
+                </div>
+            </div>
+                <div class="col-md-4">
+                    <h1>{{ propriete.titre }}</h1>
+                    <h2>{{ propriete.pieces }} pièces - {{ propriete.surface }} m2</h2>
+                    <div class="text-danger" style="font-weight: bold; font-size: 2rem">{{ propriete.formattedPrix }}€
+                    </div>
+                    <a href="#" class="btn btn-default" id="contactButton"{% if form.vars.submitted %} style="display: none;"{% endif %}>Contacter l'agence</a>
+                    <div id="contactForm" class="mt-4"{% if not form.vars.submitted %} style="display: block;"{% endif %}>
+                        {{ form_start(form) }}
+                        <div class="row">
+                            <div class="col">{{ form_row(form.firstname) }}</div>
+                            <div class="col">{{ form_row(form.lastname) }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col">{{ form_row(form.phone) }}</div>
+                            <div class="col">{{ form_row(form.email) }}</div>
+                        </div>
+                        {{ form_rest(form) }}
+                        <div class="form-group">
+                            <button class="btn btn-default">Envoyer</button>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-4">
+        <div class="col-md-12">
+            <p>
+                {{ propriete.description | raw }}
+            </p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <h2>Caractéristiques</h2>
+                <table class="table table-striped">
+                    <tr>
+                        <td>Surface habitable</td>
+                        <td>{{ propriete.surface }} m2</td>
+                    </tr>
+                    <tr>
+                        <td>Pièces</td>
+                        <td>{{ propriete.pieces }}</td>
+                    </tr>
+                    <tr>
+                        <td>Chambres</td>
+                        <td>{{ propriete.chambres }}</td>
+                    </tr>
+                    <tr>
+                        <td>Étage</td>
+                        <td>{{ propriete.etages }}</td>
+                    </tr>
+                    <tr>
+                        <td>Chauffage</td>
+                        <td>{{ propriete.chauffage }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-4">
+                <h2>Critères</h2>
+                <ul class="list-group">
+                    {% for critere in propriete.criteres %}
+                        <li class="list-group-item">{{ critere.name }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}

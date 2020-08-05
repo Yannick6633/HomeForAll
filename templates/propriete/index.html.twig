@@ -1,0 +1,62 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title 'Tous nos biens' %}
+{% block body %}
+    <div class="jumbotron text-center">
+        <div class="container">
+            {{ form_start(form) }}
+            <div class="form-row align-items-end">
+                <div class="col">
+                    {{ form_row(form.minSurface) }}
+                </div>
+                <div class="col">
+                    {{ form_row(form.maxPrice) }}
+                </div>
+                <div class="col">
+                    {{ form_row(form.criteres) }}
+                </div>
+                <div class="col">
+                    {{ form_row(form.city) }}
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                    <button class="btn btn-default">Rechercher</button>
+                    </div>
+                </div>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Les derniers biens</h2>
+        <div class="row flex">
+            {% for propriete in proprietes %}
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        {% if propriete.imagename %}
+                            <img src="{{ vich_uploader_asset(propriete, 'imageFile') | imagine_filter('thumb') }}" alt="card-img-top" style="width: 100%; height: auto">
+                        {% else %}
+                            <img src="{{ '/proprietes/empty.jpg' | imagine_filter('thumb') }}" alt="card-img-top" style="width: 100%; height: auto">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{{ path('propriete.show', {id: propriete.id, slug: propriete.slug}) }}">{{ propriete.titre }}</a>
+                            </h5>
+                            <p class="card-text">{{ propriete.description  | raw }}</p>
+                            <p class="card-text">{{ propriete.surface }} m2 - {{ propriete.ville }} ({{ propriete.codePostal }})</p>
+                            <div class="text-danger"
+                                 style="font-weight: bold; font-size: 2rem">{{ propriete.formattedPrix }} €
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="pagination">
+        {{ knp_pagination_render(proprietes) }}
+    </div>
+    </div>
+
+{% endblock %}
